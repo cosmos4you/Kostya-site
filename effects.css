@@ -79,10 +79,13 @@
 /* расчистка первого экрана: крупный заголовок + короткая строка + кнопка */
 .hero-eyebrow { display: none; }
 .hero-feats { display: none; }
-.hero-sub { display: block; max-width: 40ch; margin: 14px auto 0; text-align: center;
-  color: #fff; font-weight: 700;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.7), 0 1px 3px rgba(0,0,0,0.55); line-height: 1.4;
-  font-size: clamp(17px, 1.35vw, 20px); }
+.hero-sub { display: inline-block; max-width: 42ch; margin: 16px auto 0; text-align: center;
+  color: #fff; font-weight: 800; line-height: 1.35;
+  padding: 9px 22px; border-radius: 999px;
+  background: rgba(8,20,42,0.42); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+  font-size: clamp(20px, 2vw, 28px); }
 .hero-left { gap: 20px; }
 /* контент hero — по центру (по просьбе) */
 .hero-inner { justify-content: center; }
@@ -98,9 +101,11 @@
 /* логотип-заглушка слева в шапке убрана — бренд теперь в заставке (по просьбе) */
 .logo { display: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .hero-left .hero-eyebrow, .hero-left .hero-sub, .hero-left .hero-feats, .hero-left .hero-ctas { animation: cloudUp 0.95s cubic-bezier(0.2,0.7,0.2,1) both; }
-  .hero-left .hero-eyebrow { animation-delay: 0.06s; }
-  .hero-left .hero-sub { animation-delay: 0.58s; }
+  .hero-left .hero-feats, .hero-left .hero-ctas { animation: cloudUp 0.95s cubic-bezier(0.2,0.7,0.2,1) both; }
+  /* надзаголовок и нижняя фраза появляются ПОСЛЕ заголовка (триггер .sub-in из JS, после ухода заставки) */
+  .hero-left .hero-eyebrow, .hero-left .hero-sub { opacity: 0; filter: blur(10px); transform: translateY(10px);
+    transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .95s cubic-bezier(.2,.7,.2,1), filter .9s ease; }
+  .hero-left .hero-eyebrow.sub-in, .hero-left .hero-sub.sub-in { opacity: 1; filter: blur(0); transform: none; }
   .hero-left .hero-feats { animation-delay: 0.74s; }
   .hero-left .hero-ctas { animation-delay: 0.9s; }
 }
@@ -270,7 +275,7 @@ body { zoom: 0.85; }
 .place-title, .why-title, .pricing-title { font-size: clamp(26px, 3.6vw, 46px); }
 .video-title { font-size: clamp(24px, 3.2vw, 40px); }
 .emo-title, .emo-slogan { font-size: clamp(38px, 5.4vw, 84px); }
-.hero-sub { font-size: clamp(17px, 1.35vw, 20px); }
+.hero-sub { font-size: clamp(20px, 2vw, 28px); }
 
 /* внутренние отступы / гэпы −~30% */
 .hero-left { gap: 15px; }

@@ -357,7 +357,16 @@
     words.forEach(function (w, i) {
       w.style.transform = 'translateX(' + ((i - center) * SPREAD).toFixed(0) + 'px)';
     });
-    function start() { h.classList.add('cv-in'); }
+    var sub = document.querySelector('.hero-sub');
+    var eyebrow = document.querySelector('.hero-left .hero-eyebrow');
+    function start() {
+      h.classList.add('cv-in');
+      // надзаголовок и нижняя фраза появляются ПОСЛЕ того, как отыграет заголовок
+      setTimeout(function () {
+        if (eyebrow) eyebrow.classList.add('sub-in');
+        if (sub) sub.classList.add('sub-in');
+      }, 700);
+    }
     var intro = document.getElementById('introCurtain');
     if (intro && document.body.contains(intro)) {
       var mo = new MutationObserver(function () {
