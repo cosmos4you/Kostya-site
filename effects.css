@@ -680,6 +680,27 @@ body { zoom: 0.85; }
   .pricing-desc { transform: none; }
   .tips .section-head .desc { transform: none; }
 
+  /* ---- карточки «Гагра»: горизонтальная лента со свайпом вместо
+     длинного столбика из 4 картинок (экономит ~3 экрана прокрутки);
+     следующая карточка выглядывает с края — видно, что можно листать ---- */
+  .place-grid--images {
+    display: flex;
+    width: auto;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    margin-inline: -16px;
+    padding: 4px 16px 12px;
+    scrollbar-width: none;
+  }
+  .place-grid--images::-webkit-scrollbar { display: none; }
+  .place-grid--images .place-card-img {
+    flex: 0 0 74%;
+    width: 74%;
+    scroll-snap-align: center;
+  }
+
   /* ---- шаги «Как всё происходит»: иконка слева, весь текст справа ---- */
   .step { display: grid; grid-template-columns: 64px 1fr; column-gap: 16px; row-gap: 2px; align-items: start; padding: 0 0 10px; }
   .step-bubble { grid-row: 1 / span 3; width: 64px; height: 64px; margin: 0; }
