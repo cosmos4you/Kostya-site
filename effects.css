@@ -624,6 +624,14 @@ body { zoom: 0.85; }
    ============================================================ */
 .twk-fab, .twk-panel { display: none !important; }
 
+/* цифры в ценах, телефонах и подписях — обычным шрифтом:
+   у моноширинного JetBrains Mono ноль с точкой внутри, «11 000» читалось как «11.000» */
+.plan-options .opt, .addon-price, .channel-handle, .step-meta {
+  font-family: "Manrope", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
 /* поля и селекты формы не должны распирать колонку своей внутренней шириной
    (длинные названия тарифов в <select> растягивали грид на мобиле) */
 .form-row input, .form-row select { width: 100%; min-width: 0; }
@@ -642,17 +650,29 @@ body { zoom: 0.85; }
      100vw/fixed и делает текст мелким — возвращаем 1:1 */
   body { zoom: 1; }
 
+  /* шапка не «ползает» за скроллом: лежит поверх первого экрана
+     и уезжает вверх вместе со страницей */
+  .header, .header.scrolled {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom: 0;
+  }
+
   /* ---- HERO: полный экран, контент по центру, цифры снизу в потоке ---- */
   .hero {
     display: flex; flex-direction: column;
     min-height: 100vh; min-height: 100svh;
-    margin-top: -64px;
+    margin-top: 0;
     padding-top: 84px; padding-bottom: 18px;
   }
   .hero-inner { flex: 1 1 auto; align-items: center; }
   .hero-left { gap: 14px; }
   .hero-title { font-size: clamp(40px, 12vw, 56px); }
-  .hero-sub { font-size: 17px; line-height: 1.45; padding: 8px 16px; max-width: 100%; }
+  /* плашка под слоганом — компактная, не спорит с заголовком */
+  .hero-sub { font-size: 14px; line-height: 1.4; padding: 6px 14px; max-width: 92%; background: rgba(8,20,42,0.34); }
   /* фото во весь экран без маски + мягкое затемнение сверху и снизу */
   .hero-bg::after {
     -webkit-mask-image: none; mask-image: none;
