@@ -88,7 +88,7 @@
 
   /* 4. Счётчики */
   if (hero) {
-    var STATS = [{ target: 1500, unit: 'м', label: 'высота старта' }, { target: 20, unit: 'мин', label: 'в воздухе' }, { target: 360, unit: '°', label: 'панорама съёмки' }];
+    var STATS = [{ target: 1500, unit: 'м', label: 'высота старта' }, { target: 20, unit: 'мин', label: 'в воздухе' }];
     var heroStatsHost = document.getElementById('heroStats');
     var band = document.createElement('section'); band.className = 'stats-band'; band.setAttribute('aria-label', 'Ключевые цифры');
     var bi = document.createElement('div'); bi.className = (heroStatsHost ? 'stats-inner' : 'container stats-inner');
