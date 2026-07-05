@@ -86,10 +86,12 @@
         P[i].el.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0)';
       }
       if (heroBgEl && heroEl && mqPar.matches) {
+        /* сдвиг = полная величина прокрутки → фото «залипает» к экрану,
+           как background-attachment: fixed на десктопе (секция наезжает поверх) */
         var hy = window.scrollY || window.pageYOffset || 0;
         var hh = heroEl.offsetHeight || vh;
         var prog = Math.max(0, Math.min(hy, hh));
-        heroBgEl.style.setProperty('--hero-par', (prog * 0.16).toFixed(1) + 'px');
+        heroBgEl.style.setProperty('--hero-par', prog.toFixed(1) + 'px');
       } else if (heroBgEl) {
         heroBgEl.style.removeProperty('--hero-par');
       }

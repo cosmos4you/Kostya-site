@@ -676,7 +676,7 @@ body { zoom: 0.85; }
   /* фото во весь экран без маски + мягкое затемнение сверху и снизу;
      слой с запасом сверху/снизу и сдвигается по --hero-par (JS-параллакс) */
   .hero-bg::after {
-    inset: -16% 0;
+    inset: 0;
     -webkit-mask-image: none; mask-image: none;
     background:
       linear-gradient(180deg, rgba(8,24,58,0.55) 0%, rgba(8,24,58,0.2) 45%, rgba(8,24,58,0.62) 100%),
