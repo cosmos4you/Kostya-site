@@ -673,12 +673,16 @@ body { zoom: 0.85; }
   .hero-title { font-size: clamp(40px, 12vw, 56px); }
   /* плашка под слоганом — компактная, не спорит с заголовком */
   .hero-sub { font-size: 14px; line-height: 1.4; padding: 6px 14px; max-width: 92%; background: rgba(8,20,42,0.34); }
-  /* фото во весь экран без маски + мягкое затемнение сверху и снизу */
+  /* фото во весь экран без маски + мягкое затемнение сверху и снизу;
+     слой с запасом сверху/снизу и сдвигается по --hero-par (JS-параллакс) */
   .hero-bg::after {
+    inset: -16% 0;
     -webkit-mask-image: none; mask-image: none;
     background:
       linear-gradient(180deg, rgba(8,24,58,0.55) 0%, rgba(8,24,58,0.2) 45%, rgba(8,24,58,0.62) 100%),
       url('images/hero-flight.jpg') center center / cover no-repeat;
+    transform: translate3d(0, var(--hero-par, 0px), 0);
+    will-change: transform;
   }
   /* счётчики: не поверх текста, а строкой внизу hero, по центру группой */
   .stats-band.stats-on-hero { position: static; margin-top: 24px; padding: 0; }

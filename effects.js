@@ -70,6 +70,13 @@
     reg('.hero-sky', 0.34);     // облака — глубже всех
     reg('.hero-left', -0.07);   // текст+кнопка — опережают (передний план)
 
+    /* фото hero: на десктопе закреплено через background-attachment: fixed,
+       на мобилке fixed отключён — там двигаем фото через CSS-переменную --hero-par
+       (сам слой .hero-bg::after имеет запас inset: -16% под сдвиг) */
+    var heroBgEl = document.querySelector('.hero-bg');
+    var heroEl = document.querySelector('.hero');
+    var mqPar = window.matchMedia('(max-width: 720px)');
+
     var pTick = false;
     function pPaint() {
       var vh = window.innerHeight || document.documentElement.clientHeight;
@@ -77,6 +84,14 @@
         var r = P[i].el.getBoundingClientRect();
         var shift = (vh / 2 - (r.top + r.height / 2)) * P[i].s;
         P[i].el.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0)';
+      }
+      if (heroBgEl && heroEl && mqPar.matches) {
+        var hy = window.scrollY || window.pageYOffset || 0;
+        var hh = heroEl.offsetHeight || vh;
+        var prog = Math.max(0, Math.min(hy, hh));
+        heroBgEl.style.setProperty('--hero-par', (prog * 0.16).toFixed(1) + 'px');
+      } else if (heroBgEl) {
+        heroBgEl.style.removeProperty('--hero-par');
       }
       pTick = false;
     }
