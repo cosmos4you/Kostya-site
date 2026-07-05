@@ -740,6 +740,17 @@ body { zoom: 0.85; }
   .pricing-title { font-size: clamp(44px, 13vw, 60px); }
   .why { min-height: 72vh; padding: 56px 0; }
   .why-lead { max-width: 100%; }
+  /* фото-фоны секций залипают к экрану (как fixed на десктопе): слой на 100vh
+     держится у верха окна через сдвиг --fx-par из JS. Общее для «Гагры»,
+     «Полёт…» и экрана с руками-сердцем */
+  .place-photo::before,
+  .why::before,
+  .emo-photo::before {
+    top: 0; bottom: auto; height: 100vh; height: 100svh;
+    background-attachment: scroll;
+    transform: translate3d(0, var(--fx-par, 0px), 0);
+    will-change: transform;
+  }
   .emo { min-height: 60vh; }
 
   /* декоративные точки не должны создавать горизонтальный скролл */

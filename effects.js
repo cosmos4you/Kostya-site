@@ -75,6 +75,9 @@
        (сам слой .hero-bg::after имеет запас inset: -16% под сдвиг) */
     var heroBgEl = document.querySelector('.hero-bg');
     var heroEl = document.querySelector('.hero');
+    /* секции с фото-фоном, которое должно «залипать» к экрану на мобилке
+       (как background-attachment: fixed на десктопе) — элементы, чей ::before рисует фото */
+    var fxEls = ['.place-photo', '.why', '.emo-photo'].map(function (s) { return document.querySelector(s); }).filter(Boolean);
     var mqPar = window.matchMedia('(max-width: 720px)');
 
     var pTick = false;
@@ -94,6 +97,15 @@
         heroBgEl.style.setProperty('--hero-par', prog.toFixed(1) + 'px');
       } else if (heroBgEl) {
         heroBgEl.style.removeProperty('--hero-par');
+      }
+      /* остальные секции с фото-фоном (Гагра, «Полёт…», руки-сердце):
+         слой ::before растянут на 100vh и держится у верха окна через сдвиг -top */
+      for (var k = 0; k < fxEls.length; k++) {
+        if (mqPar.matches) {
+          fxEls[k].style.setProperty('--fx-par', (-fxEls[k].getBoundingClientRect().top).toFixed(1) + 'px');
+        } else {
+          fxEls[k].style.removeProperty('--fx-par');
+        }
       }
       pTick = false;
     }
