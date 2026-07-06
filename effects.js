@@ -70,42 +70,27 @@
     reg('.hero-sky', 0.34);     // облака — глубже всех
     reg('.hero-left', -0.07);   // текст+кнопка — опережают (передний план)
 
-    /* фото hero: на десктопе закреплено через background-attachment: fixed,
-       на мобилке fixed отключён — там двигаем фото через CSS-переменную --hero-par
-       (сам слой .hero-bg::after имеет запас inset: -16% под сдвиг) */
-    var heroBgEl = document.querySelector('.hero-bg');
-    var heroEl = document.querySelector('.hero');
-    /* секции с фото-фоном, которое должно «залипать» к экрану на мобилке
-       (как background-attachment: fixed на десктопе) — элементы, чей ::before рисует фото */
-    var fxEls = ['.place-photo', '.why', '.emo-photo'].map(function (s) { return document.querySelector(s); }).filter(Boolean);
+    /* МОБИЛКА: НИКАКОГО JS-параллакса.
+       JS-transform на скролл всегда дёргается на телефоне — страница
+       скроллится в потоке компоновщика, а JS считает в главном потоке и
+       отстаёт на кадр. Поэтому весь скролл-параллакс (и hero, и секции)
+       работает только на десктопе. На мобилке секции получают плавный
+       параллакс чисто на CSS (animation-timeline: view()), см. effects.css. */
     var mqPar = window.matchMedia('(max-width: 720px)');
 
     var pTick = false;
     function pPaint() {
       var vh = window.innerHeight || document.documentElement.clientHeight;
+      if (mqPar.matches) {
+        // на телефоне сбрасываем любые JS-сдвиги — двигает только CSS
+        for (var j = 0; j < P.length; j++) P[j].el.style.transform = '';
+        pTick = false;
+        return;
+      }
       for (var i = 0; i < P.length; i++) {
         var r = P[i].el.getBoundingClientRect();
         var shift = (vh / 2 - (r.top + r.height / 2)) * P[i].s;
         P[i].el.style.transform = 'translate3d(0,' + shift.toFixed(1) + 'px,0)';
-      }
-      if (heroBgEl && heroEl && mqPar.matches) {
-        /* сдвиг = полная величина прокрутки → фото «залипает» к экрану,
-           как background-attachment: fixed на десктопе (секция наезжает поверх) */
-        var hy = window.scrollY || window.pageYOffset || 0;
-        var hh = heroEl.offsetHeight || vh;
-        var prog = Math.max(0, Math.min(hy, hh));
-        heroBgEl.style.setProperty('--hero-par', prog.toFixed(1) + 'px');
-      } else if (heroBgEl) {
-        heroBgEl.style.removeProperty('--hero-par');
-      }
-      /* остальные секции с фото-фоном (Гагра, «Полёт…», руки-сердце):
-         слой ::before растянут на 100vh и держится у верха окна через сдвиг -top */
-      for (var k = 0; k < fxEls.length; k++) {
-        if (mqPar.matches) {
-          fxEls[k].style.setProperty('--fx-par', (-fxEls[k].getBoundingClientRect().top).toFixed(1) + 'px');
-        } else {
-          fxEls[k].style.removeProperty('--fx-par');
-        }
       }
       pTick = false;
     }

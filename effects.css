@@ -673,24 +673,34 @@ body { zoom: 0.85; }
   .hero-title { font-size: clamp(40px, 12vw, 56px); }
   /* плашка под слоганом — компактная, не спорит с заголовком */
   .hero-sub { font-size: 14px; line-height: 1.4; padding: 6px 14px; max-width: 92%; background: rgba(8,20,42,0.34); }
-  /* фото во весь экран без маски + мягкое затемнение сверху и снизу;
-     слой с запасом сверху/снизу и сдвигается по --hero-par (JS-параллакс) */
+  /* фото во весь экран без маски + мягкое затемнение сверху и снизу.
+     БЕЗ параллакса: фото скроллится вместе со страницей (прежний
+     «залипающий» --hero-par дёргался) */
   .hero-bg::after {
     inset: 0;
     -webkit-mask-image: none; mask-image: none;
     background:
       linear-gradient(180deg, rgba(8,24,58,0.55) 0%, rgba(8,24,58,0.2) 45%, rgba(8,24,58,0.62) 100%),
       url('images/hero-flight.jpg') center center / cover no-repeat;
-    transform: translate3d(0, var(--hero-par, 0px), 0);
-    will-change: transform;
+    transform: none;
   }
-  /* счётчики: не поверх текста, а строкой внизу hero, по центру группой */
-  .stats-band.stats-on-hero { position: static; margin-top: 24px; padding: 0; }
-  .stats-inner { flex-direction: row; justify-content: center; gap: 0; padding-inline: 12px; }
-  .stat { flex: 0 0 auto; padding-inline: clamp(10px, 3.4vw, 22px); }
+  /* счётчики: строка внизу hero. Сетка из 3 равных колонок — каждое число
+     центрируется в своей колонке, поэтому группа всегда ровно по центру и
+     не «уезжает» влево при узком экране (flex+justify мог переполняться).
+     hero имеет align-items:flex-start → band растягиваем на всю ширину. */
+  .stats-band.stats-on-hero { position: static; margin-top: 24px; padding: 0; align-self: stretch; width: 100%; }
+  .stats-inner {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    padding-inline: 8px;
+    align-items: start;
+  }
+  .stat { flex: initial; padding-inline: 4px; text-align: center; min-width: 0; }
   .stat + .stat { border-left: 1px solid rgba(244,239,230,0.25); border-top: 0; padding-top: 0; }
-  .stat-num { font-size: clamp(22px, 6.5vw, 30px); }
-  .stat-lbl { font-size: 9.5px; letter-spacing: 0.01em; margin-top: 4px; white-space: nowrap; }
+  .stat-num { font-size: clamp(20px, 6.2vw, 30px); justify-content: center; }
+  .stat-lbl { font-size: 9.5px; letter-spacing: 0.01em; margin-top: 4px; white-space: normal; }
 
   /* ---- заголовки секций: перенос строк вместо обрезки ---- */
   .h-section, .section-head .h-section { font-size: clamp(30px, 9.5vw, 42px); white-space: normal; }
@@ -740,16 +750,17 @@ body { zoom: 0.85; }
   .pricing-title { font-size: clamp(44px, 13vw, 60px); }
   .why { min-height: 72vh; padding: 56px 0; }
   .why-lead { max-width: 100%; }
-  /* фото-фоны секций залипают к экрану (как fixed на десктопе): слой на 100vh
-     держится у верха окна через сдвиг --fx-par из JS. Общее для «Гагры»,
-     «Полёт…» и экрана с руками-сердцем */
+  /* фото-фоны секций на мобилке — БЕЗ параллакса вообще: фото просто едет
+     вместе со страницей. Любой скролл-параллакс на iOS (JS или CSS) дёргается
+     или не поддерживается — поэтому на телефоне его нет совсем, только на
+     десктопе. Общее для «Гагры», «Полёт…» и руки-сердце. */
   .place-photo::before,
   .why::before,
   .emo-photo::before {
-    top: 0; bottom: auto; height: 100vh; height: 100svh;
+    top: 0; bottom: 0; height: auto;
     background-attachment: scroll;
-    transform: translate3d(0, var(--fx-par, 0px), 0);
-    will-change: transform;
+    transform: none;
+    animation: none;
   }
   .emo { min-height: 60vh; }
 
