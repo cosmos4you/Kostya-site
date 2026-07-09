@@ -1,2 +1,12 @@
 .DS_Store
 Thumbs.db
+
+# локальные рабочие папки — не для публикации
+.claude/
+Kostya cite/
+Kostya cite 2/
+*.zip
+data/
+test_write.txt
+Фото для сайта Кости/
+Черновики сайта/
