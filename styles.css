@@ -1482,6 +1482,18 @@ html[data-hero-font="anton"] .hero-title .marker { font-style: italic; transform
 }
 .channel:hover .channel-arrow { transform: rotate(-45deg); }
 .channel-arrow svg { width: 16px; height: 16px; }
+.channel.loc .channel-icon { background: var(--yellow); color: var(--blue); }
+.channel-info {
+  display: grid;
+  grid-template-columns: 56px 1fr auto;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 22px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+}
+.channel-info .channel-icon { background: rgba(255,255,255,0.16); color: var(--white); }
 
 /* larger social icon buttons (Instagram / VK) under the channels */
 .channels .icon-btn { width: 60px; height: 60px; border-radius: 16px; }
@@ -1715,7 +1727,8 @@ html[data-hero-font="anton"] .hero-title .marker { font-style: italic; transform
   .contacts .h-section { font-size: 44px; }
   .contacts-side { min-height: 280px; }
   .contacts-stamp { width: 90px; height: 90px; font-size: 13px; top: -10px; right: -10px; padding: 10px; }
-  .channel { grid-template-columns: 44px 1fr auto; padding: 14px 16px; }
+  .channel,
+  .channel-info { grid-template-columns: 44px 1fr auto; padding: 14px 16px; }
   .channel-icon { width: 36px; height: 36px; }
   .channel-name { font-size: 18px; }
 
