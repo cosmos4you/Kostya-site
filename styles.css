@@ -1494,6 +1494,7 @@ html[data-hero-font="anton"] .hero-title .marker { font-style: italic; transform
   border-radius: 18px;
 }
 .channel-info .channel-icon { background: rgba(255,255,255,0.16); color: var(--white); }
+.channel-info.loc .channel-icon { background: var(--yellow); color: var(--blue); }
 
 /* larger social icon buttons (Instagram / VK) under the channels */
 .channels .icon-btn { width: 60px; height: 60px; border-radius: 16px; }
