@@ -839,12 +839,19 @@
       }
     });
     if (!ok) return;
-    var text = 'Заявка с сайта GagraFly\n'
+    var text = '🪂 Заявка с сайта GagraFly\n'
       + 'Имя: ' + document.getElementById('f-name').value.trim() + '\n'
       + 'Телефон: ' + document.getElementById('f-phone').value.trim() + '\n'
       + 'Тариф: ' + document.getElementById('f-plan').value + '\n'
       + 'Дата: ' + (document.getElementById('f-date').value || 'не указана');
-    window.open('https://wa.me/79500143490?text=' + encodeURIComponent(text), '_blank');
+    // заявка автоматически падает Косте в Telegram (@gagraflybot)
+    fetch('https://api.telegram.org/bot8856622875:AAEVIqNibRmnElHQ3JdX9xqIPT0UvFQSTZQ/sendMessage', {
+      method: 'POST',
+      body: new URLSearchParams({ chat_id: '1169689724', text: text })
+    }).catch(function () {
+      // Telegram недоступен — резерв: открываем WhatsApp с готовым текстом
+      window.open('https://wa.me/79500143490?text=' + encodeURIComponent(text), '_blank');
+    });
     formState.style.display = 'none';
     successState.style.display = '';
     form.reset();
@@ -886,12 +893,19 @@
       }
     });
     if (!ok) return;
-    var text = 'Заявка с сайта GagraFly\n'
+    var text = '🪂 Заявка с сайта GagraFly\n'
       + 'Имя: ' + document.getElementById('c-name').value.trim() + '\n'
       + 'Телефон: ' + document.getElementById('c-phone').value.trim() + '\n'
       + 'Тариф: ' + document.getElementById('c-plan').value + '\n'
       + 'Дата: ' + (document.getElementById('c-date').value || 'не указана');
-    window.open('https://wa.me/79500143490?text=' + encodeURIComponent(text), '_blank');
+    // заявка автоматически падает Косте в Telegram (@gagraflybot)
+    fetch('https://api.telegram.org/bot8856622875:AAEVIqNibRmnElHQ3JdX9xqIPT0UvFQSTZQ/sendMessage', {
+      method: 'POST',
+      body: new URLSearchParams({ chat_id: '1169689724', text: text })
+    }).catch(function () {
+      // Telegram недоступен — резерв: открываем WhatsApp с готовым текстом
+      window.open('https://wa.me/79500143490?text=' + encodeURIComponent(text), '_blank');
+    });
     formState.style.display = 'none';
     successState.style.display = '';
     form.reset();
