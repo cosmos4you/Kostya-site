@@ -708,15 +708,20 @@ body { zoom: 0.85; }
      26px, «Тарифы» ~51px, остальные ~37px. Перенос строк вместо обрезки. ---- */
   .h-section, .section-head .h-section,
   .contacts .h-section,
-  .why-title, .pricing-title,
-  .shots-section h2 {
+  .why-title, .pricing-title {
     font-size: clamp(40px, 12vw, 56px);
     line-height: 1.0;
     white-space: normal;
   }
+  /* «Гагра — место, которое невозможно забыть» — прежний, более
+     компактный размер (по просьбе) */
+  .place-title, .place-head .place-title { font-size: clamp(30px, 9.5vw, 42px); }
+  /* «МОРЕ, ГОРЫ И НЕБО» — на ~4пт меньше общего размера (по просьбе) */
+  .shots-section h2 { font-size: clamp(36px, 10.5vw, 52px); line-height: 1.0; white-space: normal; }
   /* строки заголовков (nowrap на десктопе) должны переноситься,
-     иначе при крупном шрифте текст уходит за экран */
-  .why-title .row, .pricing-title .row, .place-title .row { white-space: normal; }
+     иначе при крупном шрифте текст уходит за экран. «Гагру» не трогаем:
+     у неё прежний компактный размер и строки-nowrap, как было */
+  .why-title .row, .pricing-title .row { white-space: normal; }
   .how .section-head .h-section { white-space: normal; }
   .place-lead { font-size: 18px; line-height: 1.55; }
   .how-call { font-size: 18px; }
