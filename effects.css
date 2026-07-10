@@ -711,9 +711,33 @@ body { zoom: 0.85; }
   .why-title, .pricing-title,
   .shots-section h2 {
     font-size: clamp(36px, 10.5vw, 45px);
-    line-height: 1.0;
+    line-height: 1.14;
     white-space: normal;
   }
+  /* рыжие плашки в этих заголовках — компактнее по вертикали, чтобы
+     не наезжали на соседнюю строку (плашку рисует ::before по
+     габаритам маркера) */
+  .h-section .marker, .h-section .marker-coral,
+  .why-title .marker, .pricing-title .marker, .shots-section h2 .marker {
+    line-height: 0.88;
+    padding: 0.02em 0.16em 0.05em;
+  }
+  /* «идеального полёта» переносится на две строки: inline-block давал
+     ОДНУ гигантскую плашку на обе строки сразу. inline + clone — своя
+     плашка каждой строке; фон на самом маркере, ::before-закраска
+     с этим не работает (абсолютный слой не дробится по строкам) */
+  .tips .h-section .marker {
+    display: inline;
+    background: var(--coral);
+    color: var(--white);
+    border-radius: 0.14em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    /* наклон на разбитом по строкам inline рисует паразитный обрезок
+       плашки у левого края экрана — без него */
+    transform: none;
+  }
+  .tips .h-section .marker::before { display: none; }
   /* «Гагра — место, которое невозможно забыть» — прежний, более
      компактный размер (по просьбе) */
   .place-title, .place-head .place-title { font-size: clamp(30px, 9.5vw, 42px); }
