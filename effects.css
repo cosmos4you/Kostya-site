@@ -790,10 +790,10 @@ body { zoom: 0.85; }
   .contact-form-title { font-size: 38px; }
   .why { min-height: 72vh; padding: 56px 0; }
   .why-lead { max-width: 100%; }
-  /* фото-фоны секций на мобилке — БЕЗ параллакса вообще: фото просто едет
-     вместе со страницей. Любой скролл-параллакс на iOS (JS или CSS) дёргается
-     или не поддерживается — поэтому на телефоне его нет совсем, только на
-     десктопе. Общее для «Гагры», «Полёт…» и руки-сердце. */
+  /* фото-фоны секций на мобилке: базово — обычный фон, едет со страницей
+     (background-attachment: fixed на iOS не работает, JS-параллакс дёргался).
+     Для «Полёт…» (.why) и руки-сердце (.emo) параллакс возвращается ниже,
+     в секции 12 — чистый CSS scroll-driven. «Гагра» — без параллакса. */
   .place-photo::before,
   .why::before,
   .emo-photo::before {
@@ -828,9 +828,26 @@ body { zoom: 0.85; }
       animation-timeline: scroll(root block);
       animation-range: 0px 100vh;
     }
+    /* фото-фоны секций «Полёт, который хочется прожить снова» (.why)
+       и руки-сердечком (.emo) — фон с запасом по высоте едет медленнее
+       скролла, пока секция проходит через экран (view-timeline).
+       ВАЖНО: overflow:hidden делает секцию скролл-контейнером, и view()
+       замирает — clip обрезает так же, но контейнером не является */
+    .why, .emo { overflow: clip; }
+    .why::before,
+    .emo-photo::before {
+      top: -16%; bottom: -16%; height: auto;
+      animation: sectionParMob linear both;
+      animation-timeline: view(block);
+      animation-range: cover 0% cover 100%;
+    }
   }
 }
 @keyframes heroParMob {
   from { transform: translate3d(0, 0, 0); }
   to   { transform: translate3d(0, 32vh, 0); }
+}
+@keyframes sectionParMob {
+  from { transform: translate3d(0, -7%, 0); }
+  to   { transform: translate3d(0, 7%, 0); }
 }
