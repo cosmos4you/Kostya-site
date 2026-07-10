@@ -703,21 +703,20 @@ body { zoom: 0.85; }
   .stat-num { font-size: clamp(20px, 6.2vw, 30px); justify-content: center; }
   .stat-lbl { font-size: 9.5px; letter-spacing: 0.01em; margin-top: 4px; white-space: normal; }
 
-  /* ---- заголовки секций: ЕДИНЫЙ размер по заголовку первого экрана
-     (.hero-title = clamp(40px, 12vw, 56px)). Раньше разнобой: «Почему»
-     26px, «Тарифы» ~51px, остальные ~37px. Перенос строк вместо обрезки. ---- */
+  /* ---- заголовки секций: ЕДИНЫЙ размер, 45px на iPhone (10.5vw при
+     ширине 430). Видео, «Как всё происходит», «Почему», «Правила»,
+     «Тарифы», «Контакты», «Море, горы и небо» — всё одной величины. ---- */
   .h-section, .section-head .h-section,
   .contacts .h-section,
-  .why-title, .pricing-title {
-    font-size: clamp(40px, 12vw, 56px);
+  .why-title, .pricing-title,
+  .shots-section h2 {
+    font-size: clamp(36px, 10.5vw, 45px);
     line-height: 1.0;
     white-space: normal;
   }
   /* «Гагра — место, которое невозможно забыть» — прежний, более
      компактный размер (по просьбе) */
   .place-title, .place-head .place-title { font-size: clamp(30px, 9.5vw, 42px); }
-  /* «МОРЕ, ГОРЫ И НЕБО» — на ~4пт меньше общего размера (по просьбе) */
-  .shots-section h2 { font-size: clamp(36px, 10.5vw, 52px); line-height: 1.0; white-space: normal; }
   /* строки заголовков (nowrap на десктопе) должны переноситься,
      иначе при крупном шрифте текст уходит за экран. «Гагру» не трогаем:
      у неё прежний компактный размер и строки-nowrap, как было */
