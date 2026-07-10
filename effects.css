@@ -674,8 +674,9 @@ body { zoom: 0.85; }
   /* плашка под слоганом — компактная, не спорит с заголовком */
   .hero-sub { font-size: 14px; line-height: 1.4; padding: 6px 14px; max-width: 92%; background: rgba(8,20,42,0.34); }
   /* фото во весь экран без маски + мягкое затемнение сверху и снизу.
-     БЕЗ параллакса: фото скроллится вместе со страницей (прежний
-     «залипающий» --hero-par дёргался) */
+     Параллакс — НЕ здесь и НЕ через JS (прежний «залипающий» --hero-par
+     дёргался): см. секцию 12 в конце файла — чистый CSS scroll-driven,
+     работает в композиторе без дёрганий */
   .hero-bg::after {
     inset: 0;
     -webkit-mask-image: none; mask-image: none;
@@ -702,8 +703,20 @@ body { zoom: 0.85; }
   .stat-num { font-size: clamp(20px, 6.2vw, 30px); justify-content: center; }
   .stat-lbl { font-size: 9.5px; letter-spacing: 0.01em; margin-top: 4px; white-space: normal; }
 
-  /* ---- заголовки секций: перенос строк вместо обрезки ---- */
-  .h-section, .section-head .h-section { font-size: clamp(30px, 9.5vw, 42px); white-space: normal; }
+  /* ---- заголовки секций: ЕДИНЫЙ размер по заголовку первого экрана
+     (.hero-title = clamp(40px, 12vw, 56px)). Раньше разнобой: «Почему»
+     26px, «Тарифы» ~51px, остальные ~37px. Перенос строк вместо обрезки. ---- */
+  .h-section, .section-head .h-section,
+  .contacts .h-section,
+  .why-title, .pricing-title,
+  .shots-section h2 {
+    font-size: clamp(40px, 12vw, 56px);
+    line-height: 1.0;
+    white-space: normal;
+  }
+  /* строки заголовков (nowrap на десктопе) должны переноситься,
+     иначе при крупном шрифте текст уходит за экран */
+  .why-title .row, .pricing-title .row, .place-title .row { white-space: normal; }
   .how .section-head .h-section { white-space: normal; }
   .place-lead { font-size: 18px; line-height: 1.55; }
   .how-call { font-size: 18px; }
@@ -747,7 +760,6 @@ body { zoom: 0.85; }
   /* ---- карточки и формы: компактные отступы ---- */
   .contact-form-card { padding: 28px 22px; }
   .contact-form-title { font-size: 38px; }
-  .pricing-title { font-size: clamp(44px, 13vw, 60px); }
   .why { min-height: 72vh; padding: 56px 0; }
   .why-lead { max-width: 100%; }
   /* фото-фоны секций на мобилке — БЕЗ параллакса вообще: фото просто едет
@@ -769,4 +781,28 @@ body { zoom: 0.85; }
 
   /* модалка записи: на невысоких экранах прокручивается, а не обрезается */
   .modal { max-height: calc(100vh - 24px); max-height: calc(100svh - 24px); overflow-y: auto; }
+}
+
+/* ============================================================
+   12. ПАРАЛЛАКС ПЕРВОГО ЭКРАНА НА ТЕЛЕФОНЕ — чистый CSS.
+   Scroll-driven animation исполняется в композиторе (как сам скролл),
+   поэтому не дёргается — в отличие от старого JS --hero-par, который
+   считался в главном потоке и отставал на кадр. Фото «отстаёт» от
+   скролла (сдвигается вниз на 32% пройденного пути) — контент уезжает
+   быстрее фона. Где animation-timeline не поддерживается (старые iOS),
+   правило игнорируется целиком: фото просто едет со страницей, багов нет.
+   На десктопе параллакс героя остаётся прежним: background-attachment: fixed.
+   ============================================================ */
+@supports (animation-timeline: scroll()) {
+  @media (max-width: 720px) and (prefers-reduced-motion: no-preference) {
+    .hero-bg::after {
+      animation: heroParMob linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0px 100vh;
+    }
+  }
+}
+@keyframes heroParMob {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(0, 32vh, 0); }
 }
