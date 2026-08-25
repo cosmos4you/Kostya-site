@@ -1039,3 +1039,17 @@ body { zoom: 0.85; }
 @media (max-width: 760px) {
   .footer-nap { font-size: 13px; }
 }
+
+/* ============ SEO: описание под логотипом в подвале ============ */
+.footer-about {
+  max-width: 720px;
+  margin: 0 auto 22px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.65;
+  color: rgba(244, 239, 230, 0.62);
+}
+.footer-about strong { color: rgba(244, 239, 230, 0.9); font-weight: 700; }
+@media (max-width: 760px) {
+  .footer-about { font-size: 13px; text-align: left; margin-bottom: 18px; }
+}
