@@ -155,9 +155,18 @@
   (function centerCarousel() {
     var place = document.querySelector('.place');
     if (!place) return;
-    var IMAGES = ['gallery/g-01.webp?v=3','gallery/g-02.webp?v=3','gallery/g-03.webp?v=3','gallery/g-04.webp?v=3',
-                  'gallery/g-05.webp?v=3','gallery/g-06.webp?v=3','gallery/g-07.webp?v=3'];
+    var IMAGES = ['gallery/g-01.webp?v=4','gallery/g-02.webp?v=4','gallery/g-03.webp?v=4','gallery/g-04.webp?v=4',
+                  'gallery/g-05.webp?v=4','gallery/g-06.webp?v=4','gallery/g-07.webp?v=4'];
 
+    var ALTS = [
+      'Пилот и пассажирка в тандеме над облаками и склонами Мамдзышхи',
+      'Оранжевое крыло параплана над бирюзовой бухтой и побережьем Гагры',
+      'Жёлтый параплан среди облаков на закате над Чёрным морем',
+      'Взгляд вниз на солнечную дорожку и побережье Гагры с высоты полёта',
+      'Два параплана над облаками и лесистым хребтом Кавказа',
+      'Тандемный полёт над пляжем и бирюзовым морем в Гагре',
+      'Силуэт параплана на фоне закатного солнца над морем и скалами',
+    ];
     var sec = document.createElement('section'); sec.className = 'shots-section'; sec.id = 'shots';
     sec.setAttribute('aria-label', 'Кадры из реальных полётов'); sec.tabIndex = 0;
     var head = document.createElement('div'); head.className = 'shots-head';
@@ -170,7 +179,11 @@
     IMAGES.forEach(function (src, i) {
       var s = document.createElement('button'); s.type = 'button'; s.className = 'cf-slide';
       s.setAttribute('aria-label', 'Фото ' + (i + 1));
-      var img = document.createElement('img'); img.src = src; img.alt = ''; img.loading = 'lazy'; img.draggable = false;
+      var img = document.createElement('img');
+      var base = src.split('?')[0].replace('.webp', '');
+      img.sizes = '(max-width: 760px) 50vw, 360px';
+      img.srcset = base + '-400.webp 400w, ' + base + '-800.webp 800w, ' + src + ' 1200w';
+      img.src = src; img.alt = ALTS[i] || 'Кадр из полёта на параплане над Гагрой'; img.loading = 'lazy'; img.draggable = false;
       s.appendChild(img); stage.appendChild(s); slides.push(s);
     });
     cf.appendChild(stage);

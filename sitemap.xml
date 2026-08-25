@@ -11,16 +11,20 @@
       <image:title>Полёт на параплане в Гагре — GagraFly</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://gagrafly.ru/images/hero-flight.jpg</image:loc>
-      <image:title>Тандемный полёт на параплане над Гагрой</image:title>
+      <image:loc>https://gagrafly.ru/images/hero-flight.webp</image:loc>
+      <image:title>Тандемный полёт на параплане над морем и побережьем Гагры</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://gagrafly.ru/images/tandem-selfie.jpg</image:loc>
+      <image:loc>https://gagrafly.ru/images/tandem-selfie.webp</image:loc>
       <image:title>Тандемное селфи пилота и пассажирки над облаками</image:title>
     </image:image>
     <image:image>
-      <image:loc>https://gagrafly.ru/images/hero-hands-heart.jpg</image:loc>
+      <image:loc>https://gagrafly.ru/images/hero-hands-heart.webp</image:loc>
       <image:title>Сердце руками над облаками во время полёта над Гагрой</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://gagrafly.ru/images/tips-photo.webp</image:loc>
+      <image:title>Тандемный полёт на параплане над морем в Гагре</image:title>
     </image:image>
   </url>
 </urlset>
