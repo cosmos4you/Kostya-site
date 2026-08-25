@@ -155,8 +155,8 @@
   (function centerCarousel() {
     var place = document.querySelector('.place');
     if (!place) return;
-    var IMAGES = ['gallery/g-01.jpg?v=3','gallery/g-02.jpg?v=3','gallery/g-03.jpg?v=3','gallery/g-04.jpg?v=3',
-                  'gallery/g-05.jpg?v=3','gallery/g-06.jpg?v=3','gallery/g-07.jpg?v=3'];
+    var IMAGES = ['gallery/g-01.webp?v=3','gallery/g-02.webp?v=3','gallery/g-03.webp?v=3','gallery/g-04.webp?v=3',
+                  'gallery/g-05.webp?v=3','gallery/g-06.webp?v=3','gallery/g-07.webp?v=3'];
 
     var sec = document.createElement('section'); sec.className = 'shots-section'; sec.id = 'shots';
     sec.setAttribute('aria-label', 'Кадры из реальных полётов'); sec.tabIndex = 0;
@@ -302,7 +302,7 @@
     var stage = document.querySelector('.why .why-stage');
     var row = document.querySelector('.why .why-row');
     if (!stage || !row) return;
-    var PH = ['gallery/land-03.jpg', 'gallery/port-01.jpg', 'gallery/land-04.jpg', 'gallery/port-03.jpg', 'gallery/land-06.jpg'];
+    var PH = ['gallery/land-03.webp', 'gallery/port-01.webp', 'gallery/land-04.webp', 'gallery/port-03.webp', 'gallery/land-06.webp'];
     var feat = document.createElement('div'); feat.className = 'why-feature'; feat.setAttribute('aria-hidden', 'true');
     PH.forEach(function (src, i) {
       var d = document.createElement('div'); d.className = 'wf-img' + (i === 0 ? ' on' : '');

@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+User-agent: Yandex
+Allow: /
+Clean-param: utm_source&utm_medium&utm_campaign&utm_term&utm_content&yclid&_openstat&from&gclid /
+
+User-agent: YandexImages
+Allow: /
+
+Sitemap: https://gagrafly.ru/sitemap.xml
