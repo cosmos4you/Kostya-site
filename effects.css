@@ -1053,3 +1053,11 @@ body { zoom: 0.85; }
 @media (max-width: 760px) {
   .footer-about { font-size: 13px; text-align: left; margin-bottom: 18px; }
 }
+
+/* ============ Кнопка «Отзывы на Картах» — на 30% мельче ============ */
+.reviews-cta .btn {
+  font-size: 15.4px;      /* было 22 */
+  padding: 9.8px 15.4px;  /* было 14 / 22 */
+  gap: 7px;               /* было 10 */
+}
+.reviews-cta .btn .btn-bird { width: 50px; height: auto; flex-shrink: 0; }
