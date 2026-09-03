@@ -1147,6 +1147,24 @@
 </div>
 
 <script>
+// Адрес обработчика заявок (Google Apps Script). Он пересылает заявку Косте
+// в Telegram; токен бота хранится у обработчика, в коде сайта его нет.
+// Пока адрес пустой — заявки идут резервом в WhatsApp.
+window.RELAY_URL = '';
+
+// Отправка заявки. Если обработчик не задан или ответил ошибкой —
+// резерв: открываем WhatsApp с уже готовым текстом заявки.
+window.sendLead = function (data, text) {
+  var wa = function () {
+    window.open('https://wa.me/79500143490?text=' + encodeURIComponent(text), '_blank');
+  };
+  if (!window.RELAY_URL) { wa(); return; }
+  fetch(window.RELAY_URL, { method: 'POST', body: new URLSearchParams(data) })
+    .then(function (r) { if (!r.ok) throw new Error('relay ' + r.status); })
+    .catch(wa);
+};
+</script>
+<script>
 (function(){
   const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
     "heroFont": "bebas"
@@ -1217,19 +1235,18 @@
       }
     });
     if (!ok) return;
+    var nm = document.getElementById('f-name').value.trim();
+    var ph = document.getElementById('f-phone').value.trim();
+    var pl = document.getElementById('f-plan').value;
+    var dt = document.getElementById('f-date').value || 'не указана';
     var text = '🪂 Заявка с сайта GagraFly\n'
-      + 'Имя: ' + document.getElementById('f-name').value.trim() + '\n'
-      + 'Телефон: ' + document.getElementById('f-phone').value.trim() + '\n'
-      + 'Тариф: ' + document.getElementById('f-plan').value + '\n'
-      + 'Дата: ' + (document.getElementById('f-date').value || 'не указана');
-    // заявка автоматически падает Косте в Telegram (@gagraflybot)
-    fetch('https://api.telegram.org/bot8856622875:AAEVIqNibRmnElHQ3JdX9xqIPT0UvFQSTZQ/sendMessage', {
-      method: 'POST',
-      body: new URLSearchParams({ chat_id: '1169689724', text: text })
-    }).catch(function () {
-      // Telegram недоступен — резерв: открываем WhatsApp с готовым текстом
-      window.open('https://wa.me/79500143490?text=' + encodeURIComponent(text), '_blank');
-    });
+      + 'Имя: ' + nm + '\n'
+      + 'Телефон: ' + ph + '\n'
+      + 'Тариф: ' + pl + '\n'
+      + 'Дата: ' + dt;
+    // заявка уходит на обработчик, он уже пересылает её Косте в Telegram.
+    // если обработчик недоступен или ответил ошибкой — резерв: WhatsApp с готовым текстом.
+    window.sendLead({ name: nm, phone: ph, plan: pl, date: dt }, text);
     if (window.ymGoal) window.ymGoal('booking');
     formState.style.display = 'none';
     successState.style.display = '';
@@ -1272,19 +1289,18 @@
       }
     });
     if (!ok) return;
+    var nm = document.getElementById('c-name').value.trim();
+    var ph = document.getElementById('c-phone').value.trim();
+    var pl = document.getElementById('c-plan').value;
+    var dt = document.getElementById('c-date').value || 'не указана';
     var text = '🪂 Заявка с сайта GagraFly\n'
-      + 'Имя: ' + document.getElementById('c-name').value.trim() + '\n'
-      + 'Телефон: ' + document.getElementById('c-phone').value.trim() + '\n'
-      + 'Тариф: ' + document.getElementById('c-plan').value + '\n'
-      + 'Дата: ' + (document.getElementById('c-date').value || 'не указана');
-    // заявка автоматически падает Косте в Telegram (@gagraflybot)
-    fetch('https://api.telegram.org/bot8856622875:AAEVIqNibRmnElHQ3JdX9xqIPT0UvFQSTZQ/sendMessage', {
-      method: 'POST',
-      body: new URLSearchParams({ chat_id: '1169689724', text: text })
-    }).catch(function () {
-      // Telegram недоступен — резерв: открываем WhatsApp с готовым текстом
-      window.open('https://wa.me/79500143490?text=' + encodeURIComponent(text), '_blank');
-    });
+      + 'Имя: ' + nm + '\n'
+      + 'Телефон: ' + ph + '\n'
+      + 'Тариф: ' + pl + '\n'
+      + 'Дата: ' + dt;
+    // заявка уходит на обработчик, он уже пересылает её Косте в Telegram.
+    // если обработчик недоступен или ответил ошибкой — резерв: WhatsApp с готовым текстом.
+    window.sendLead({ name: nm, phone: ph, plan: pl, date: dt }, text);
     if (window.ymGoal) window.ymGoal('booking');
     formState.style.display = 'none';
     successState.style.display = '';
