@@ -1,0 +1,9 @@
+{
+  "name": "gagrafly-relay",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Приём заявок с gagrafly.ru и пересылка их в Telegram",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" }
+}
