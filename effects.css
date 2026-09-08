@@ -1061,3 +1061,7 @@ body { zoom: 0.85; }
   gap: 7px;               /* было 10 */
 }
 .reviews-cta .btn .btn-bird { width: 50px; height: auto; flex-shrink: 0; }
+
+/* Ссылки на страницы-гиды в подвале — иначе неотличимы от текста */
+.footer-about a { color: var(--cream); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244,239,230,0.45); }
+.footer-about a:hover { text-decoration-color: var(--coral); color: var(--coral); }

@@ -348,7 +348,7 @@
         <span class="row">МЕСТО, КОТОРОЕ</span>
         <span class="row"><span class="marker">НЕВОЗМОЖНО ЗАБЫТЬ</span></span>
       </h2>
-      <p class="place-lead">Полёт на параплане в тандеме с инструктором в Гагре — старт с горы Мамдзышха, высота 1500 метров, около 20 минут в воздухе, посадка прямо на пляж. Трансфер от отеля и обратно, экипировка и инструктаж уже в цене, съёмка на Insta360 или GoPro — от 9 000 ₽. Гагра — лучшее место для полёта в Абхазии: здесь море и горы одновременно, субтропики и бирюза Чёрного моря за один полёт.</p>
+      <p class="place-lead">В Гагре море и горы сходятся вплотную: Кавказский хребет подступает к самой воде, оставляя вдоль берега узкую полосу субтропиков. Отсюда и вид, которого не будет больше нигде — слева зелёные склоны, справа бирюза до горизонта, внизу весь город целиком.</p>
     </div>
 
     <div class="place-grid place-grid--images">
@@ -992,6 +992,10 @@
       Трансфер от отеля, экипировка и инструктаж уже в цене, каждый полёт снимаем на Insta360 или GoPro.
       От 9 000 ₽, записываемся за 1–2 дня.
     </p>
+    <p class="footer-about">
+      Полезное о месте: <a href="/gora-mamdzyshkha/">гора Мамдзышха — высота, серпантин и как добраться</a> ·
+      <a href="/chto-posmotret-v-gagre/">что посмотреть в Гагре: маршрут на один день</a>
+    </p>
   </div>
   <div class="container footer-inner">
     <p class="footer-nap">
@@ -1155,12 +1159,19 @@ window.RELAY_URL = 'https://gagrafly-relay-production.up.railway.app/';
 // Отправка заявки. Если обработчик не задан или ответил ошибкой —
 // резерв: открываем WhatsApp с уже готовым текстом заявки.
 window.sendLead = function (data, text) {
+  var goal = function (name) { if (window.ymGoal) window.ymGoal(name); };
   var wa = function () {
+    // Резерв: заявка не ушла на обработчик — уводим в WhatsApp с готовым текстом.
+    // Отдельная цель, чтобы в Метрике было видно расхождение «отправил» и «дошло».
+    goal('booking_fallback');
     window.open('https://wa.me/79500143490?text=' + encodeURIComponent(text), '_blank');
   };
   if (!window.RELAY_URL) { wa(); return; }
   fetch(window.RELAY_URL, { method: 'POST', body: new URLSearchParams(data) })
-    .then(function (r) { if (!r.ok) throw new Error('relay ' + r.status); })
+    .then(function (r) {
+      if (!r.ok) throw new Error('relay ' + r.status);
+      goal('booking');
+    })
     .catch(wa);
 };
 </script>
@@ -1246,8 +1257,8 @@ window.sendLead = function (data, text) {
       + 'Дата: ' + dt;
     // заявка уходит на обработчик, он уже пересылает её Косте в Telegram.
     // если обработчик недоступен или ответил ошибкой — резерв: WhatsApp с готовым текстом.
+    // цель «booking» засчитывается внутри sendLead — только когда заявка реально дошла
     window.sendLead({ name: nm, phone: ph, plan: pl, date: dt }, text);
-    if (window.ymGoal) window.ymGoal('booking');
     formState.style.display = 'none';
     successState.style.display = '';
     form.reset();
@@ -1300,8 +1311,8 @@ window.sendLead = function (data, text) {
       + 'Дата: ' + dt;
     // заявка уходит на обработчик, он уже пересылает её Косте в Telegram.
     // если обработчик недоступен или ответил ошибкой — резерв: WhatsApp с готовым текстом.
+    // цель «booking» засчитывается внутри sendLead — только когда заявка реально дошла
     window.sendLead({ name: nm, phone: ph, plan: pl, date: dt }, text);
-    if (window.ymGoal) window.ymGoal('booking');
     formState.style.display = 'none';
     successState.style.display = '';
     form.reset();
@@ -1327,7 +1338,8 @@ window.sendLead = function (data, text) {
 
 <!-- ====================== ЯНДЕКС.МЕТРИКА ======================
      Счётчик Яндекс.Метрики для gagrafly.ru — номер 111943574.
-     Цель «booking» привязана к обеим формам записи через window.ymGoal().
+     Цель «booking» засчитывается в window.sendLead(), когда обработчик подтвердил
+     доставку заявки. Если он недоступен — цель «booking_fallback» и уход в WhatsApp.
      Чтобы временно выключить сбор статистики — поставить YM_ID = 0. -->
 <script>
 window.YM_ID = 111943574;

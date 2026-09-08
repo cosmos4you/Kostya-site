@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://gagrafly.ru/</loc>
-    <lastmod>2026-08-25</lastmod>
+    <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -26,5 +26,17 @@
       <image:loc>https://gagrafly.ru/images/tips-photo.webp</image:loc>
       <image:title>Тандемный полёт на параплане над морем в Гагре</image:title>
     </image:image>
+  </url>
+  <url>
+    <loc>https://gagrafly.ru/gora-mamdzyshkha/</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gagrafly.ru/chto-posmotret-v-gagre/</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 </urlset>
