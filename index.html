@@ -974,6 +974,12 @@
             <h3 class="contact-form-title">Поймали!</h3>
             <p class="contact-form-sub" style="margin: 0 auto 4px;">Спасибо. Свяжемся в течение 15 минут, чтобы подтвердить дату и место встречи.</p>
           </div>
+          <div id="contact-fail-state" style="display:none;" class="modal-success">
+            <h3 class="contact-form-title">Заявка не отправилась</h3>
+            <p class="contact-form-sub" style="margin: 0 auto 20px;">Сайт неСвязь со&nbsp;стороны сайта подвела. Отправьтеnbsp;смог связаться сСвязь со&nbsp;стороны сайта подвела. Отправьтеnbsp;нами. Отправьте заявку в&nbsp;WhatsApp — текст уже готов, или просто позвоните.</p>
+            <a class="btn btn-primary" data-lead-wa href="https://wa.me/79500143490" target="_blank" rel="noopener" style="justify-content: center; margin-bottom: 10px;">Отправить в WhatsApp</a>
+            <a class="btn btn-outline" href="tel:+79500143490" style="justify-content: center;">Позвонить +7 950 014-34-90</a>
+          </div>
         </div>
       </div>
     </div>
@@ -1085,6 +1091,12 @@
       <p class="modal-sub" style="margin-bottom: 24px;">Спасибо. Свяжемся в течение 15 минут, чтобы подтвердить дату и место встречи.</p>
       <button class="btn btn-outline" data-close-modal style="justify-content: center;">Хорошо</button>
     </div>
+    <div id="modal-fail-state" style="display:none;" class="modal-success">
+      <h3 class="modal-title">Заявка не отправилась</h3>
+      <p class="modal-sub" style="margin: 0 auto 20px;">Сайт неСвязь со&nbsp;стороны сайта подвела. Отправьтеnbsp;смог связаться сСвязь со&nbsp;стороны сайта подвела. Отправьтеnbsp;нами. Отправьте заявку в&nbsp;WhatsApp — текст уже готов, или просто позвоните.</p>
+      <a class="btn btn-primary" data-lead-wa href="https://wa.me/79500143490" target="_blank" rel="noopener" style="justify-content: center; margin-bottom: 10px;">Отправить в WhatsApp</a>
+      <a class="btn btn-outline" href="tel:+79500143490" style="justify-content: center;">Позвонить +7 950 014-34-90</a>
+    </div>
   </div>
 </div>
 
@@ -1151,28 +1163,59 @@
 </div>
 
 <script>
-// Адрес обработчика заявок (Google Apps Script). Он пересылает заявку Косте
+// Адрес обработчика заявок (Railway, backend/relay). Он пересылает заявку Косте
 // в Telegram; токен бота хранится у обработчика, в коде сайта его нет.
-// Пока обработчик не отвечает — заявки идут резервом в WhatsApp.
 window.RELAY_URL = 'https://gagrafly-relay-production.up.railway.app/';
 
-// Отправка заявки. Если обработчик не задан или ответил ошибкой —
-// резерв: открываем WhatsApp с уже готовым текстом заявки.
-window.sendLead = function (data, text) {
+// Отправка заявки на обработчик. done(true) — заявка дошла до Telegram,
+// done(false) — не дошла (сеть, обработчик, Telegram). Одна повторная попытка.
+// Раньше при ошибке открывали WhatsApp через window.open, но после асинхронного
+// запроса браузеры (особенно Safari на iPhone) блокируют такое окно — посетитель
+// видел «Поймали!», а заявка пропадала. Теперь форма сама показывает ошибку
+// и кнопку WhatsApp, которую посетитель нажимает руками.
+window.sendLead = function (data, text, done) {
   var goal = function (name) { if (window.ymGoal) window.ymGoal(name); };
-  var wa = function () {
-    // Резерв: заявка не ушла на обработчик — уводим в WhatsApp с готовым текстом.
-    // Отдельная цель, чтобы в Метрике было видно расхождение «отправил» и «дошло».
-    goal('booking_fallback');
-    window.open('https://wa.me/79500143490?text=' + encodeURIComponent(text), '_blank');
+  var attempt = function (left) {
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = ctrl && setTimeout(function () { ctrl.abort(); }, 12000);
+    fetch(window.RELAY_URL, { method: 'POST', body: new URLSearchParams(data), signal: ctrl && ctrl.signal })
+      .then(function (r) {
+        clearTimeout(timer);
+        if (!r.ok) throw new Error('relay ' + r.status);
+        goal('booking');
+        done(true);
+      })
+      .catch(function () {
+        clearTimeout(timer);
+        if (left > 0) return setTimeout(function () { attempt(left - 1); }, 1500);
+        goal('booking_fallback');
+        done(false);
+      });
   };
-  if (!window.RELAY_URL) { wa(); return; }
-  fetch(window.RELAY_URL, { method: 'POST', body: new URLSearchParams(data) })
-    .then(function (r) {
-      if (!r.ok) throw new Error('relay ' + r.status);
-      goal('booking');
-    })
-    .catch(wa);
+  if (!window.RELAY_URL) { goal('booking_fallback'); done(false); return; }
+  attempt(1);
+};
+
+// Общая обработка отправки формы: блокируем кнопку, ждём ответа обработчика
+// и только потом показываем «Поймали!» или блок ошибки с готовой ссылкой в WhatsApp.
+window.submitLead = function (form, data, text, formState, successState, failState) {
+  var btn = form.querySelector('[type=submit]');
+  var label = btn.innerHTML;
+  btn.disabled = true;
+  btn.textContent = 'Отправляем…';
+  window.sendLead(data, text, function (ok) {
+    btn.disabled = false;
+    btn.innerHTML = label;
+    formState.style.display = 'none';
+    if (ok) {
+      successState.style.display = '';
+      form.reset();
+    } else {
+      failState.querySelector('[data-lead-wa]').href =
+        'https://wa.me/79500143490?text=' + encodeURIComponent(text);
+      failState.style.display = '';
+    }
+  });
 };
 </script>
 <script>
@@ -1203,12 +1246,14 @@ window.sendLead = function (data, text) {
   const overlay = document.getElementById('modal');
   const formState = document.getElementById('modal-form-state');
   const successState = document.getElementById('modal-success-state');
+  const failState = document.getElementById('modal-fail-state');
   const form = document.getElementById('booking-form');
   const planSelect = document.getElementById('f-plan');
 
   function open(plan) {
     formState.style.display = '';
     successState.style.display = 'none';
+    failState.style.display = 'none';
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
     if (plan && plan !== 'default') {
@@ -1255,13 +1300,9 @@ window.sendLead = function (data, text) {
       + 'Телефон: ' + ph + '\n'
       + 'Тариф: ' + pl + '\n'
       + 'Дата: ' + dt;
-    // заявка уходит на обработчик, он уже пересылает её Косте в Telegram.
-    // если обработчик недоступен или ответил ошибкой — резерв: WhatsApp с готовым текстом.
-    // цель «booking» засчитывается внутри sendLead — только когда заявка реально дошла
-    window.sendLead({ name: nm, phone: ph, plan: pl, date: dt }, text);
-    formState.style.display = 'none';
-    successState.style.display = '';
-    form.reset();
+    // заявка уходит на обработчик, он пересылает её Косте в Telegram.
+    // «Поймали!» показываем только после подтверждения, иначе — блок ошибки с WhatsApp.
+    window.submitLead(form, { name: nm, phone: ph, plan: pl, date: dt }, text, formState, successState, failState);
   });
 
   // observe child fade-in (do NOT fade entire sections — large sections never satisfy threshold)
@@ -1285,6 +1326,7 @@ window.sendLead = function (data, text) {
   if (!form) return;
   const formState = document.getElementById('contact-form-state');
   const successState = document.getElementById('contact-success-state');
+  const failState = document.getElementById('contact-fail-state');
   form.addEventListener('submit', e => {
     e.preventDefault();
     let ok = true;
@@ -1309,13 +1351,9 @@ window.sendLead = function (data, text) {
       + 'Телефон: ' + ph + '\n'
       + 'Тариф: ' + pl + '\n'
       + 'Дата: ' + dt;
-    // заявка уходит на обработчик, он уже пересылает её Косте в Telegram.
-    // если обработчик недоступен или ответил ошибкой — резерв: WhatsApp с готовым текстом.
-    // цель «booking» засчитывается внутри sendLead — только когда заявка реально дошла
-    window.sendLead({ name: nm, phone: ph, plan: pl, date: dt }, text);
-    formState.style.display = 'none';
-    successState.style.display = '';
-    form.reset();
+    // заявка уходит на обработчик, он пересылает её Косте в Telegram.
+    // «Поймали!» показываем только после подтверждения, иначе — блок ошибки с WhatsApp.
+    window.submitLead(form, { name: nm, phone: ph, plan: pl, date: dt }, text, formState, successState, failState);
   });
 })();
 </script>
@@ -1339,7 +1377,8 @@ window.sendLead = function (data, text) {
 <!-- ====================== ЯНДЕКС.МЕТРИКА ======================
      Счётчик Яндекс.Метрики для gagrafly.ru — номер 111943574.
      Цель «booking» засчитывается в window.sendLead(), когда обработчик подтвердил
-     доставку заявки. Если он недоступен — цель «booking_fallback» и уход в WhatsApp.
+     доставку заявки. Если не подтвердил — цель «booking_fallback», форма показывает
+     блок ошибки с кнопкой WhatsApp.
      Чтобы временно выключить сбор статистики — поставить YM_ID = 0. -->
 <script>
 window.YM_ID = 111943574;
