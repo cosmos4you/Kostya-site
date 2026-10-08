@@ -423,15 +423,39 @@
 })();
 
 
-/* Видео «как выглядит полёт»: без звука, играет только пока блок на экране */
+/* Видео «как выглядит полёт»: без звука, играет пока блок на экране.
+   Если браузер блокирует автозапуск (энергосбережение iPhone, экономия трафика) —
+   показываем кнопку Play и пробуем снова при первом касании. */
 (function () {
   var video = document.querySelector('.video-frame .video-el');
+  var btn = document.querySelector('.video-frame .video-play');
   if (!video) return;
   video.muted = true;
-  if (!('IntersectionObserver' in window)) { video.play().catch(function () {}); return; }
-  new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { video.play().catch(function () {}); } else { video.pause(); }
-    });
-  }, { threshold: 0.35 }).observe(video);
+  var inView = false, timer = 0;
+
+  function showBtn(on) { if (btn) btn.hidden = !on; }
+  function tryPlay() {
+    var p = video.play();
+    if (p && p.then) {
+      p.then(function () { showBtn(false); }).catch(function () { showBtn(true); });
+    }
+    clearTimeout(timer);
+    timer = setTimeout(function () { if (inView && video.paused) showBtn(true); }, 1800);
+  }
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        inView = e.isIntersecting;
+        if (inView) { tryPlay(); } else { video.pause(); }
+      });
+    }, { threshold: 0.35 }).observe(video);
+  } else { inView = true; tryPlay(); }
+
+  if (btn) btn.addEventListener('click', function () { tryPlay(); });
+  video.addEventListener('playing', function () { showBtn(false); });
+  ['touchstart', 'pointerdown', 'scroll'].forEach(function (ev) {
+    window.addEventListener(ev, function () { if (inView && video.paused) tryPlay(); }, { passive: true, once: ev !== 'scroll' });
+  });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden && inView) tryPlay(); });
 })();
