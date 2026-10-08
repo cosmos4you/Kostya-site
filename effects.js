@@ -423,39 +423,18 @@
 })();
 
 
-/* Видео «как выглядит полёт»: без звука, играет пока блок на экране.
-   Если браузер блокирует автозапуск (энергосбережение iPhone, экономия трафика) —
-   показываем кнопку Play и пробуем снова при первом касании. */
+/* Видео «как выглядит полёт»: со звуком, ничего не грузится, пока не нажата кнопка Play */
 (function () {
-  var video = document.querySelector('.video-frame .video-el');
-  var btn = document.querySelector('.video-frame .video-play');
-  if (!video) return;
-  video.muted = true;
-  var inView = false, timer = 0;
-
-  function showBtn(on) { if (btn) btn.hidden = !on; }
-  function tryPlay() {
+  var frame = document.querySelector('.video-frame');
+  var video = frame && frame.querySelector('.video-el');
+  var btn = frame && frame.querySelector('.video-play');
+  if (!video || !btn) return;
+  btn.addEventListener('click', function () {
+    video.controls = true;
+    video.muted = false;
+    frame.classList.add('is-playing');
     var p = video.play();
-    if (p && p.then) {
-      p.then(function () { showBtn(false); }).catch(function () { showBtn(true); });
-    }
-    clearTimeout(timer);
-    timer = setTimeout(function () { if (inView && video.paused) showBtn(true); }, 1800);
-  }
-
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        inView = e.isIntersecting;
-        if (inView) { tryPlay(); } else { video.pause(); }
-      });
-    }, { threshold: 0.35 }).observe(video);
-  } else { inView = true; tryPlay(); }
-
-  if (btn) btn.addEventListener('click', function () { tryPlay(); });
-  video.addEventListener('playing', function () { showBtn(false); });
-  ['touchstart', 'pointerdown', 'scroll'].forEach(function (ev) {
-    window.addEventListener(ev, function () { if (inView && video.paused) tryPlay(); }, { passive: true, once: ev !== 'scroll' });
+    if (p && p.catch) p.catch(function () { frame.classList.remove('is-playing'); video.controls = false; });
   });
-  document.addEventListener('visibilitychange', function () { if (!document.hidden && inView) tryPlay(); });
+  video.addEventListener('ended', function () { frame.classList.remove('is-playing'); video.controls = false; video.load(); });
 })();
