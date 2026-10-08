@@ -1065,3 +1065,12 @@ body { zoom: 0.85; }
 /* Ссылки на страницы-гиды в подвале — иначе неотличимы от текста */
 .footer-about a { color: var(--cream); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(244,239,230,0.45); }
 .footer-about a:hover { text-decoration-color: var(--coral); color: var(--coral); }
+
+/* ===== 12. ВИДЕО «КАК ВЫГЛЯДИТ ПОЛЁТ» ===== */
+.video-wrap { max-width: min(100%, 640px); }
+.video-frame { aspect-ratio: 9 / 8; }
+.video-frame .video-el { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #000; display: block; }
+.video-frame .video-el:not(.is-started) { pointer-events: none; }
+.video-frame .video-el:not(.is-started)::-webkit-media-controls { display: none !important; }
+.video-frame .video-play { position: relative; z-index: 2; }
+.video-frame.is-playing .video-play { display: none; }

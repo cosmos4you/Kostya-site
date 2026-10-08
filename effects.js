@@ -421,3 +421,19 @@
   })();
 
 })();
+
+
+/* Видео «как выглядит полёт»: старт по кнопке, со звуком */
+(function () {
+  var frame = document.querySelector('.video-frame');
+  if (!frame) return;
+  var video = frame.querySelector('.video-el');
+  var btn = frame.querySelector('.video-play');
+  if (!video || !btn) return;
+  btn.addEventListener('click', function () {
+    video.classList.add('is-started');
+    frame.classList.add('is-playing');
+    video.play().catch(function () { frame.classList.remove('is-playing'); });
+  });
+  video.addEventListener('ended', function () { frame.classList.remove('is-playing'); video.classList.remove('is-started'); });
+})();

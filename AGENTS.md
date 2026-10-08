@@ -14,6 +14,7 @@
 - `chto-posmotret-v-gagre/`, `gora-mamdzyshkha/` — SEO-страницы.
 - `sitemap.xml`, `robots.txt`, `site.webmanifest`, `yandex_*.html` — SEO/верификация, не удалять.
 - `gallery/`, `images/`, `photos/` — картинки (jpg/png + webp в размерах 400/800).
+- `video/` — ролик «как выглядит полёт» (flight.mp4 H.264 + постер). Исходник лежит локально и не в репозитории.
 
 ## Важные правила
 - На десктопе `body { zoom: 0.85 }`; на мобиле (≤720px) он сброшен в 1 — этот сброс не удалять.
