@@ -423,17 +423,15 @@
 })();
 
 
-/* Видео «как выглядит полёт»: старт по кнопке, со звуком */
+/* Видео «как выглядит полёт»: без звука, играет только пока блок на экране */
 (function () {
-  var frame = document.querySelector('.video-frame');
-  if (!frame) return;
-  var video = frame.querySelector('.video-el');
-  var btn = frame.querySelector('.video-play');
-  if (!video || !btn) return;
-  btn.addEventListener('click', function () {
-    video.classList.add('is-started');
-    frame.classList.add('is-playing');
-    video.play().catch(function () { frame.classList.remove('is-playing'); });
-  });
-  video.addEventListener('ended', function () { frame.classList.remove('is-playing'); video.classList.remove('is-started'); });
+  var video = document.querySelector('.video-frame .video-el');
+  if (!video) return;
+  video.muted = true;
+  if (!('IntersectionObserver' in window)) { video.play().catch(function () {}); return; }
+  new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { video.play().catch(function () {}); } else { video.pause(); }
+    });
+  }, { threshold: 0.35 }).observe(video);
 })();
